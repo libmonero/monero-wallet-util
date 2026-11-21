@@ -20,4 +20,4 @@ wasm-bindgen = { version = "0.2", default-features = false }
 wasm-bindgen-futures = { version = "0.4", default-features = false }
 web-sys = { version = "0.3", default-features = false, features = ["Blob", "Request", "RequestInit", "Response", "Window"] }
 
-monero-daemon-rpc = { git = "https://github.com/monero-oxide/monero-oxide", default-features = false }
+monero-daemon-rpc = { git = "https://github.com/monero-oxide/monero-oxide", rev = "a941dfff1a5333b6349d9a1ee5de49c158b0e3d2", default-features = false }
