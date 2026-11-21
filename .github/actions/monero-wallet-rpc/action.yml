@@ -35,6 +35,20 @@ runs:
 
         FILE=monero-$RUNNER_OS-$RUNNER_ARCH-${{ inputs.version }}.tar.bz2
         wget https://downloads.getmonero.org/cli/$FILE
+
+        # Verify the download against the SHA256 hash published for the release, refusing to
+        # install any version without a hash on record
+        case ${{ inputs.version }} in
+          v0.17.3.2)
+            HASH=1e54acd749265d9439d3733441c645d9b058316283c8f21cca2a333c1238cd16;;
+          v0.18.4.6)
+            HASH=60cfc32d39c6fe6c19b23513d02017fe9055d2e412ee4cbc30fa40ba811fe052;;
+          *)
+            echo "No SHA256 hash on record for Monero ${{ inputs.version }}" >&2
+            exit 1;;
+        esac
+        echo "$HASH  $FILE" | sha256sum -c -
+
         tar -xvf $FILE
 
         mv monero-x86_64-linux-gnu-${{ inputs.version }}/monero-wallet-rpc monero-wallet-rpc

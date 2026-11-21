@@ -5,15 +5,30 @@ on:
     branches:
       - main
     paths:
-      - "monero-oxide/**"
+      - "seed/**"
+      - "polyseed/**"
+      - "epee/**"
+      - "util/**"
       - "tests/no-std/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
 
   pull_request:
     paths:
-      - "monero-oxide/**"
+      - "seed/**"
+      - "polyseed/**"
+      - "epee/**"
+      - "util/**"
       - "tests/no-std/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
 
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
