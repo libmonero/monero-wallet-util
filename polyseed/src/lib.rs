@@ -313,6 +313,12 @@ impl Polyseed {
     // Decode the seed into its polynomial coefficients
     let mut poly = [0; POLYSEED_LENGTH];
 
+    // A seed is a fixed count of words: a shorter one would decode to a different seed, and a
+    // longer one would write past the polynomial
+    if seed.split_whitespace().count() != POLYSEED_LENGTH {
+      Err(PolyseedError::InvalidSeed)?;
+    }
+
     // Validate words are in the lang word list
     let lang_word_list: &WordList = &LANGUAGES[&lang];
     for (i, word) in seed.split_whitespace().enumerate() {

@@ -233,3 +233,19 @@ fn test_key() {
     ]
   );
 }
+
+#[test]
+fn test_invalid_polyseed_word_count() {
+  // The reference vector is sixteen words; every count but sixteen must be refused, for the
+  // longer ones because they would write past the polynomial
+  for seed in [
+    "",
+    "raven",
+    "raven tail swear infant grief assist regular lamp duck valid someone little harsh puppy airport",
+    "raven tail swear infant grief assist regular lamp duck valid someone little harsh puppy airport language raven",
+    "raven tail swear infant grief assist regular lamp duck valid someone little harsh puppy airport language raven tail swear infant grief assist regular lamp duck valid someone",
+  ] {
+    let res = Polyseed::from_string(Language::English, Zeroizing::new(seed.into()));
+    assert_eq!(res, Err(PolyseedError::InvalidSeed));
+  }
+}
