@@ -44,6 +44,7 @@ fn test_polyseed_round_trip() {
   .unwrap();
 
   // The birthday is embedded rounded down to a whole Polyseed month
+  assert!(BIRTHDAY - seed.birthday() < 2_629_746);
   assert!(seed.birthday() <= BIRTHDAY);
 
   let parsed =

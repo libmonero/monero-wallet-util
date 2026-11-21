@@ -105,7 +105,7 @@ async fn __unsafe_internal_post(
     })?;
 
     if let Some(limit) = response_size_limit {
-      if res.len() + chunk_len > limit {
+      if res.len().saturating_add(chunk_len) > limit {
         // Cancel the stream so the rest of the oversized response isn't received; whether the
         // cancellation succeeds is irrelevant as the response is being rejected regardless
         let _ = JsFuture::from(reader.cancel()).await;

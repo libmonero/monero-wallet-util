@@ -6,7 +6,12 @@ db-urls = ["https://github.com/rustsec/advisory-db"]
 
 yanked = "deny"
 
-ignore = []
+ignore = [
+  # RUSTSEC-2026-0387, timing variability in crypto-bigint 0.5: the fix needs >= 0.7.6, which
+  # monero-ed25519 at the pinned revision of monero-oxide does not accept. kept until the pin
+  # moves past it
+  "RUSTSEC-2026-0387",
+]
 
 [licenses]
 version = 2
