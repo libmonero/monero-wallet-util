@@ -100,7 +100,8 @@ impl Seed {
   /// SeedType::Original, it will be ignored. For SeedType::Polyseed, it'll be embedded into the
   /// seed.
   ///
-  /// For SeedType::Polyseed, the last 13 bytes of `entropy` must be 0.
+  /// For SeedType::Polyseed, the last 13 bytes of `entropy` must be 0, and the top two bits of
+  /// the 19th byte must be 0, as the format reserves them for its features.
   ///
   /// Returns `SeedError::InvalidEntropy` if the entropy isn't valid for the seed type, which is
   /// when the entropy isn't a canonical scalar for `SeedType::Original`, or when the entropy uses
