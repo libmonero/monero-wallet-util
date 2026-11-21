@@ -25,8 +25,7 @@ const INTERNAL_FEATURES: u8 = 2;
 const USER_FEATURES: u8 = 3;
 
 const USER_FEATURES_MASK: u8 = (1 << USER_FEATURES) - 1;
-const ENCRYPTED_MASK: u8 = 1 << 4;
-const RESERVED_FEATURES_MASK: u8 = ((1 << FEATURE_BITS) - 1) ^ ENCRYPTED_MASK;
+const RESERVED_FEATURES_MASK: u8 = ((1 << FEATURE_BITS) - 1) ^ USER_FEATURES_MASK;
 
 fn user_features(features: u8) -> u8 {
   features & USER_FEATURES_MASK

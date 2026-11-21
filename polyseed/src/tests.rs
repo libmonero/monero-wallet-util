@@ -249,3 +249,16 @@ fn test_invalid_polyseed_word_count() {
     assert_eq!(res, Err(PolyseedError::InvalidSeed));
   }
 }
+
+#[test]
+fn test_polyseed_user_features() {
+  // The user feature bits are part of the format and survive a round trip through the string
+  let mut entropy = [0; 32];
+  entropy[..18].fill(0x42);
+  entropy[18] = 0x42 & 0x3f;
+  let seed = Polyseed::from(Language::English, 0b101, 0, Zeroizing::new(entropy)).unwrap();
+  assert_eq!(seed.features(), 0b101);
+  let decoded = Polyseed::from_string(Language::English, seed.to_string()).unwrap();
+  assert_eq!(decoded.features(), 0b101);
+  assert_eq!(decoded, seed);
+}
