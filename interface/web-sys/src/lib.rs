@@ -12,7 +12,10 @@ use alloc::{vec::Vec, string::String};
 
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::JsFuture;
-use web_sys::{js_sys::Uint8Array, Request, RequestInit, Response};
+use web_sys::{
+  js_sys::{Reflect, Uint8Array},
+  ReadableStreamDefaultReader, Request, RequestInit, Response,
+};
 
 pub use monero_daemon_rpc::prelude;
 use monero_daemon_rpc::{prelude::InterfaceError, HttpTransport, MoneroDaemon};
@@ -36,6 +39,7 @@ async fn __unsafe_internal_post(
   url: &str,
   route: &str,
   body: Vec<u8>,
+  response_size_limit: Option<usize>,
 ) -> Result<Vec<u8>, InterfaceError> {
   let opts = RequestInit::new();
   opts.set_method("POST");
@@ -63,28 +67,70 @@ async fn __unsafe_internal_post(
     )));
   }
 
-  // Get response as ArrayBuffer
-  let array_buffer = JsFuture::from(
-    response
-      .array_buffer()
-      .map_err(|e| InterfaceError::InternalError(format!("failed to get array buffer: {e:?}")))?,
-  )
-  .await
-  .map_err(|e| InterfaceError::InternalError(format!("failed to await array buffer: {e:?}")))?;
+  /*
+    Read the body as a stream so a response exceeding the size limit is rejected while being
+    read. Buffering the body in full (as `array_buffer` would) would let a malicious daemon
+    exhaust the tab's memory before the size was ever checked.
+  */
+  let stream = response.body().ok_or_else(|| {
+    InterfaceError::InvalidInterface("response didn't include a body to read".to_owned())
+  })?;
+  let reader: ReadableStreamDefaultReader = stream.get_reader().dyn_into().map_err(|_| {
+    InterfaceError::InternalError("response body couldn't be read with a default reader".to_owned())
+  })?;
 
-  // Convert ArrayBuffer to Uint8Array and then to Vec<u8>
-  let uint8_array = Uint8Array::new(&array_buffer);
-  let mut result = vec![
-    0;
-    usize::try_from(uint8_array.length()).map_err(|_| {
-      InterfaceError::InternalError("received array of length exceeding `usize`".to_owned())
-    })?
-  ];
-  uint8_array.copy_to(&mut result);
+  let mut res = Vec::new();
+  loop {
+    let read = JsFuture::from(reader.read()).await.map_err(|e| {
+      InterfaceError::InvalidInterface(format!("failed to read response body: {e:?}"))
+    })?;
+    let done = Reflect::get(&read, &JsValue::from("done"))
+      .map_err(|e| InterfaceError::InternalError(format!("failed to get `done` from read: {e:?}")))?
+      .as_bool()
+      .ok_or_else(|| {
+        InterfaceError::InternalError("read result's `done` wasn't a boolean".to_owned())
+      })?;
+    if done {
+      break;
+    }
 
-  Ok(result)
+    let chunk = Reflect::get(&read, &JsValue::from("value"))
+      .map_err(|e| {
+        InterfaceError::InternalError(format!("failed to get `value` from read: {e:?}"))
+      })?
+      .dyn_into::<Uint8Array>()
+      .map_err(|_| InterfaceError::InternalError("read result wasn't a Uint8Array".to_owned()))?;
+    let chunk_len = usize::try_from(chunk.length()).map_err(|_| {
+      InterfaceError::InternalError("received chunk of length exceeding `usize`".to_owned())
+    })?;
+
+    if let Some(limit) = response_size_limit {
+      if res.len().saturating_add(chunk_len) > limit {
+        // Cancel the stream so the rest of the oversized response isn't received; whether the
+        // cancellation succeeds is irrelevant as the response is being rejected regardless
+        let _ = JsFuture::from(reader.cancel()).await;
+        Err(InterfaceError::InvalidInterface(format!(
+          "response exceeded the size limit of {limit} bytes"
+        )))?;
+      }
+    }
+
+    let start = res.len();
+    res.resize(start + chunk_len, 0);
+    chunk.copy_to(&mut res[start ..]);
+  }
+
+  Ok(res)
 }
 
+/// A future wrapped to claim `Send` as `HttpTransport::post` returns an `impl Send + Future`.
+///
+/// The wrapped future holds JS values, which aren't `Send` as JS offers no guarantees regarding
+/// its objects being moved between threads. Browsers execute JS, and the WASM calling into it,
+/// on a single thread, so this future will never actually be sent across a thread and the claim
+/// of `Send` is vacuous. This is only sound under that single-threaded model; it would be
+/// unsound if this were polled from a multi-threaded runtime (as shared-memory WASM threads
+/// would allow).
 #[repr(transparent)]
 struct UnsafeSendFuture<F: Future>(F);
 unsafe impl<F: Future> Send for UnsafeSendFuture<F> {}
@@ -101,8 +147,8 @@ impl HttpTransport for WebSysTransport {
     &self,
     route: &str,
     body: Vec<u8>,
-    _response_size_limit: Option<usize>,
+    response_size_limit: Option<usize>,
   ) -> impl Send + Future<Output = Result<Vec<u8>, InterfaceError>> {
-    UnsafeSendFuture(__unsafe_internal_post(&self.url, route, body))
+    UnsafeSendFuture(__unsafe_internal_post(&self.url, route, body, response_size_limit))
   }
 }

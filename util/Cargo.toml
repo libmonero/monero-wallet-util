@@ -23,13 +23,16 @@ thiserror = { version = "1", default-features = false, optional = true }
 zeroize = { version = "1.5", default-features = false, features = ["zeroize_derive"] }
 rand_core = { version = "0.6", default-features = false }
 
-monero-wallet = { git = "https://github.com/monero-oxide/monero-oxide", default-features = false }
+monero-wallet = { git = "https://github.com/monero-oxide/monero-oxide", rev = "a941dfff1a5333b6349d9a1ee5de49c158b0e3d2", default-features = false }
 
 monero-seed = { path = "../seed", default-features = false }
 polyseed = { path = "../polyseed", default-features = false }
 
 monero-epee-traits = { path = "../epee/traits", default-features = false }
 monero-epee-derive = { path = "../epee/derive", default-features = false }
+
+[dev-dependencies]
+zeroize = { version = "1.5", default-features = false, features = ["alloc"] }
 
 [features]
 std = [

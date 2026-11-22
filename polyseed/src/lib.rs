@@ -25,8 +25,7 @@ const INTERNAL_FEATURES: u8 = 2;
 const USER_FEATURES: u8 = 3;
 
 const USER_FEATURES_MASK: u8 = (1 << USER_FEATURES) - 1;
-const ENCRYPTED_MASK: u8 = 1 << 4;
-const RESERVED_FEATURES_MASK: u8 = ((1 << FEATURE_BITS) - 1) ^ ENCRYPTED_MASK;
+const RESERVED_FEATURES_MASK: u8 = ((1 << FEATURE_BITS) - 1) ^ USER_FEATURES_MASK;
 
 fn user_features(features: u8) -> u8 {
   features & USER_FEATURES_MASK
@@ -312,6 +311,12 @@ impl Polyseed {
   pub fn from_string(lang: Language, seed: Zeroizing<String>) -> Result<Polyseed, PolyseedError> {
     // Decode the seed into its polynomial coefficients
     let mut poly = [0; POLYSEED_LENGTH];
+
+    // A seed is a fixed count of words: a shorter one would decode to a different seed, and a
+    // longer one would write past the polynomial
+    if seed.split_whitespace().count() != POLYSEED_LENGTH {
+      Err(PolyseedError::InvalidSeed)?;
+    }
 
     // Validate words are in the lang word list
     let lang_word_list: &WordList = &LANGUAGES[&lang];

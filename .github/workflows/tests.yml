@@ -7,6 +7,9 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   # Only run these once since they will be consistent regardless of any node
   unit-tests:
@@ -46,6 +49,8 @@ jobs:
           }
           check_workspace
 
+  # Runs the workspace's integration test targets, which the unit-tests job doesn't cover as it
+  # only runs `--lib`. The regtest daemon and wallet RPC are available to any test needing them.
   integration-tests:
     runs-on: ubuntu-latest
     # Test against all supported protocol versions
@@ -63,8 +68,8 @@ jobs:
 
       - name: Run Integration Tests
         run: |
-          # GITHUB_CI=true RUST_BACKTRACE=1 cargo test --package monero-oxide --test '*'
+          GITHUB_CI=true RUST_BACKTRACE=1 cargo test --workspace --tests
 
       - name: Run Integration Tests With All Features
         run: |
-          # GITHUB_CI=true RUST_BACKTRACE=1 cargo test --package monero-oxide --all-features --test '*'
+          GITHUB_CI=true RUST_BACKTRACE=1 cargo test --workspace --tests --all-features

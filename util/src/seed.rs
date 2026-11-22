@@ -100,17 +100,23 @@ impl Seed {
   /// SeedType::Original, it will be ignored. For SeedType::Polyseed, it'll be embedded into the
   /// seed.
   ///
-  /// For SeedType::Polyseed, the last 13 bytes of `entropy` must be 0.
-  // TODO: Return Result, not Option
+  /// For SeedType::Polyseed, the last 13 bytes of `entropy` must be 0, and the top two bits of
+  /// the 19th byte must be 0, as the format reserves them for its features.
+  ///
+  /// Returns `SeedError::InvalidEntropy` if the entropy isn't valid for the seed type, which is
+  /// when the entropy isn't a canonical scalar for `SeedType::Original`, or when the entropy uses
+  /// the bytes `SeedType::Polyseed` reserves for its own fields.
   pub fn from_entropy(
     seed_type: SeedType,
     entropy: Zeroizing<[u8; 32]>,
     birthday: Option<u64>,
-  ) -> Option<Seed> {
+  ) -> Result<Seed, SeedError> {
     match seed_type {
-      SeedType::Original(lang) => OriginalSeed::from_entropy(lang, entropy).map(Seed::Original),
+      SeedType::Original(lang) => OriginalSeed::from_entropy(lang, entropy)
+        .map(Seed::Original)
+        .ok_or(SeedError::InvalidEntropy),
       SeedType::Polyseed(lang) => {
-        Polyseed::from(lang, 0, birthday.unwrap_or(0), entropy).ok().map(Seed::Polyseed)
+        Ok(Polyseed::from(lang, 0, birthday.unwrap_or(0), entropy).map(Seed::Polyseed)?)
       }
     }
   }

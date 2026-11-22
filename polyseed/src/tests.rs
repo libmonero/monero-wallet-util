@@ -233,3 +233,35 @@ fn test_key() {
     ]
   );
 }
+
+#[test]
+fn test_invalid_polyseed_word_count() {
+  // The reference vector is sixteen words; every count but sixteen must be refused, for the
+  // longer ones because they would write past the polynomial
+  for seed in [
+    "",
+    "raven",
+    "raven tail swear infant grief assist regular lamp \
+      duck valid someone little harsh puppy airport",
+    "raven tail swear infant grief assist regular lamp duck valid someone little harsh puppy \
+      airport language raven",
+    "raven tail swear infant grief assist regular lamp duck valid someone little harsh puppy \
+      airport language raven tail swear infant grief assist regular lamp duck valid someone",
+  ] {
+    let res = Polyseed::from_string(Language::English, Zeroizing::new(seed.into()));
+    assert_eq!(res, Err(PolyseedError::InvalidSeed));
+  }
+}
+
+#[test]
+fn test_polyseed_user_features() {
+  // The user feature bits are part of the format and survive a round trip through the string
+  let mut entropy = [0; 32];
+  entropy[.. 18].fill(0x42);
+  entropy[18] = 0x42 & 0x3f;
+  let seed = Polyseed::from(Language::English, 0b101, 0, Zeroizing::new(entropy)).unwrap();
+  assert_eq!(seed.features(), 0b101);
+  let decoded = Polyseed::from_string(Language::English, seed.to_string()).unwrap();
+  assert_eq!(decoded.features(), 0b101);
+  assert_eq!(decoded, seed);
+}

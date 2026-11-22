@@ -535,7 +535,7 @@ dependencies = [
 [[package]]
 name = "monero-address"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "monero-base58",
  "monero-ed25519",
@@ -548,7 +548,7 @@ dependencies = [
 [[package]]
 name = "monero-base58"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "monero-primitives",
  "std-shims",
@@ -557,7 +557,7 @@ dependencies = [
 [[package]]
 name = "monero-borromean"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "monero-ed25519",
@@ -569,7 +569,7 @@ dependencies = [
 [[package]]
 name = "monero-bulletproofs"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "monero-bulletproofs-generators",
@@ -585,7 +585,7 @@ dependencies = [
 [[package]]
 name = "monero-bulletproofs-generators"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "monero-ed25519",
@@ -597,7 +597,7 @@ dependencies = [
 [[package]]
 name = "monero-clsag"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "dalek-ff-group 0.5.0",
@@ -617,7 +617,7 @@ dependencies = [
 [[package]]
 name = "monero-daemon-rpc"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "hex",
  "monero-address",
@@ -632,7 +632,7 @@ dependencies = [
 [[package]]
 name = "monero-ed25519"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "crypto-bigint",
  "curve25519-dalek",
@@ -647,7 +647,7 @@ dependencies = [
 [[package]]
 name = "monero-epee"
 version = "0.2.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 
 [[package]]
 name = "monero-epee-derive"
@@ -666,7 +666,7 @@ dependencies = [
 [[package]]
 name = "monero-interface"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "hex",
  "monero-oxide",
@@ -678,7 +678,7 @@ dependencies = [
 [[package]]
 name = "monero-io"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "std-shims",
 ]
@@ -686,7 +686,7 @@ dependencies = [
 [[package]]
 name = "monero-mlsag"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "monero-ed25519",
@@ -699,7 +699,7 @@ dependencies = [
 [[package]]
 name = "monero-oxide"
 version = "0.1.4-alpha"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "hex-literal",
@@ -724,7 +724,7 @@ dependencies = [
 [[package]]
 name = "monero-primitives"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "sha3",
 ]
@@ -745,7 +745,7 @@ dependencies = [
 [[package]]
 name = "monero-wallet"
 version = "0.1.0"
-source = "git+https://github.com/monero-oxide/monero-oxide#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
+source = "git+https://github.com/monero-oxide/monero-oxide?rev=a941dfff1a5333b6349d9a1ee5de49c158b0e3d2#a941dfff1a5333b6349d9a1ee5de49c158b0e3d2"
 dependencies = [
  "curve25519-dalek",
  "flexible-transcript",
@@ -1093,9 +1093,9 @@ dependencies = [
 
 [[package]]
 name = "spin"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5fe4ccb98d9c292d56fec89a5e07da7fc4cf0dc11e156b41793132775d3e591"
+checksum = "023a211cb3138dbc438680b32560ad89f699977624c9f8dbb95a47d5b4c07dd3"
 
 [[package]]
 name = "spki"
